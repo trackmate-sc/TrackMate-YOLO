@@ -15,10 +15,10 @@ import org.apache.commons.io.input.TailerListenerAdapter;
 
 import fiji.plugin.trackmate.Logger;
 import fiji.plugin.trackmate.Spot;
-import fiji.plugin.trackmate.util.TMUtils;
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
+import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
 import net.imglib2.Interval;
@@ -60,7 +60,7 @@ public class YOLOUtils
 	 * Resaves the specified image, one file per time-point, so that it can be
 	 * processed by an external process.
 	 * <p>
-	 * Single imte-points will be resaved as ImageJ TIFFs, in the specified
+	 * Single time-points will be resaved as ImageJ TIFFs, in the specified
 	 * folder, with a name ending with the time-point value (0-based). Examples:
 	 * "0.tif", "20.tif".
 	 *
@@ -118,7 +118,7 @@ public class YOLOUtils
 			final String name = nameGen.apply( 0l );
 			final ImagePlus imp = ImageJFunctions.wrap( crop, name );
 			final String path = folder + File.separator + name + ".tif";
-			return IJ.saveAsTiff( imp, path );
+			return IJ.saveAsTiff( convertToRGB( imp ), path );
 		}
 		else
 		{
@@ -141,7 +141,7 @@ public class YOLOUtils
 				final String name = nameGen.apply( t );
 				final String path = folder + File.separator + name + ".tif";
 				final ImagePlus imp = ImageJFunctions.wrap( crop, name );
-				final boolean ok = IJ.saveAsTiff( imp, path );
+				final boolean ok = IJ.saveAsTiff( convertToRGB( imp ), path );
 				if ( !ok )
 					return false;
 
@@ -149,6 +149,17 @@ public class YOLOUtils
 			}
 			return true;
 		}
+	}
+
+	private static ImagePlus convertToRGB( final ImagePlus imp )
+	{
+		final ImageProcessor ip = imp.getProcessor();
+		if ( ip instanceof ColorProcessor )
+		{ return imp; }
+
+		final ImageProcessor rgbProcessor = ip.convertToRGB();
+		final ImagePlus rgbImage = new ImagePlus( imp.getTitle() + "-RGB", rgbProcessor );
+		return rgbImage;
 	}
 
 
@@ -286,16 +297,4 @@ public class YOLOUtils
 
 		return spots;
 	}
-
-	public static < T extends RealType< T > & NativeType< T > > void main( final String[] args )
-	{
-		final String path = "samples/SHicham_Video1_crop.tif";
-		final ImagePlus imp = IJ.openImage( path );
-		@SuppressWarnings( "unchecked" )
-		final ImgPlus< T > img = TMUtils.rawWraps( imp );
-
-		ImageJ.main( args );
-		wrap( img ).show();
-	}
-
 }
