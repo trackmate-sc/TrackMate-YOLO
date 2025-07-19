@@ -69,6 +69,10 @@ public class YOLODetectorFactory< T extends RealType< T > & NativeType< T > > im
 
 	public static final double DEFAULT_YOLO_IOU = 0.7;
 
+	public static final String KEY_USE_GPU = "USE_GPU";
+
+	public static final boolean DEFAULT_USE_GPU = true;
+
 	/** A string key identifying this factory. */
 	public static final String DETECTOR_KEY = "YOLO_DETECTOR";
 

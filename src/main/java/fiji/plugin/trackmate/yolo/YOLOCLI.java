@@ -21,16 +21,19 @@
  */
 package fiji.plugin.trackmate.yolo;
 
+import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.DEFAULT_USE_GPU;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.DEFAULT_YOLO_CONF;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.DEFAULT_YOLO_IOU;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.DEFAULT_YOLO_MODEL_FILEPATH;
+import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.KEY_USE_GPU;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.KEY_YOLO_CONF;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.KEY_YOLO_IOU;
 import static fiji.plugin.trackmate.yolo.YOLODetectorFactory.KEY_YOLO_MODEL_FILEPATH;
 
-import fiji.plugin.trackmate.util.cli.CliGuiBuilder;
-import fiji.plugin.trackmate.util.cli.CliGuiBuilder.CliConfigPanel;
+import java.util.Collections;
+
 import fiji.plugin.trackmate.util.cli.CondaExecutableCLIConfigurator;
+import ij.IJ;
 
 public class YOLOCLI extends CondaExecutableCLIConfigurator
 {
@@ -44,6 +47,8 @@ public class YOLOCLI extends CondaExecutableCLIConfigurator
 	private final DoubleArgument iou;
 
 	private final DoubleArgument conf;
+
+	private final Flag useGPU;
 
 	public YOLOCLI()
 	{
@@ -96,6 +101,29 @@ public class YOLOCLI extends CondaExecutableCLIConfigurator
 				.required( true )
 				.key( null )
 				.get();
+
+		this.useGPU = addFlag()
+				.name( "Use GPU" )
+				.help( "Whether to use the GPU for inference. If false, the CPU will be used." )
+				.argument( "device=" )
+				.key( KEY_USE_GPU )
+				.defaultValue( DEFAULT_USE_GPU )
+				.required( true )
+				.visible( true )
+				.get();
+		useGPU.set( false );
+		setCommandTranslator( useGPU, f -> {
+			if ( ( boolean ) f )
+			{
+				if ( IJ.isMacintosh() )
+					return Collections.singletonList( "mps" );
+				return Collections.singletonList( "cuda" );
+			}
+			else
+			{
+				return Collections.singletonList( "cpu" );
+			}
+		} );
 
 		addFlag()
 				.name( "Save detections to text files" )
@@ -157,10 +185,5 @@ public class YOLOCLI extends CondaExecutableCLIConfigurator
 	public DoubleArgument confidenceThreshold()
 	{
 		return conf;
-	}
-
-	public static CliConfigPanel build( final YOLOCLI cli )
-	{
-		return CliGuiBuilder.build( cli );
 	}
 }
