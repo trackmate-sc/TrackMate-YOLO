@@ -20,10 +20,10 @@ public class YOLOPlaygroundEntry
 
 		final YOLOCLI cli = new YOLOCLI();
 		cli.getCommandArg().set( "yolo" );
-		cli.modelPath().set( "/Users/tinevez/Desktop/BacterialDynamicsDataset/SHichamDataset/models/best 1.pt" );
+		cli.modelPath().set( "samples/best 8.pt" );
 
-		final Logger logger = Logger.DEFAULT_LOGGER;
-		final YOLODetector< T > detector = new YOLODetector< T >( img, img, cli, logger );
+		final YOLODetector< T > detector = new YOLODetector< T >( img, img, cli );
+		detector.setLogger( Logger.DEFAULT_LOGGER );
 		final boolean ok = detector.checkInput() && detector.process();
 		if ( !ok )
 			System.err.println( detector.getErrorMessage() );
