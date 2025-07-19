@@ -46,20 +46,18 @@ public class YOLODetector< T extends RealType< T > & NativeType< T > > implement
 
 	private final Interval interval;
 
-	private final Logger logger;
+	private Logger logger = Logger.VOID_LOGGER;
 
 	private final YOLOCLI cli;
 
 	public YOLODetector(
 			final ImgPlus< T > img,
 			final Interval interval,
-			final YOLOCLI cli,
-			final Logger logger )
+			final YOLOCLI cli )
 	{
 		this.img = img;
 		this.interval = interval;
 		this.cli = cli;
-		this.logger = ( logger == null ) ? Logger.VOID_LOGGER : logger;
 	}
 
 	@Override
@@ -278,5 +276,11 @@ public class YOLODetector< T extends RealType< T > & NativeType< T > > implement
 	public long getProcessingTime()
 	{
 		return processingTime;
+	}
+
+	@Override
+	public void setLogger( final Logger logger )
+	{
+		this.logger = logger;
 	}
 }
