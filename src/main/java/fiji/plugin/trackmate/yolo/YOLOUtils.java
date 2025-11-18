@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -43,7 +43,6 @@ import ij.process.ImageProcessor;
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
 import net.imglib2.Interval;
-import net.imglib2.img.display.imagej.CalibrationUtils;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.img.display.imagej.ImgPlusViews;
 import net.imglib2.type.NativeType;
@@ -54,28 +53,6 @@ import net.imglib2.view.Views;
 
 public class YOLOUtils
 {
-
-	/**
-	 * Properly wraps an {@link ImgPlus} in a {@link ImagePlus}, ensuring that
-	 * the dimensionality and the calibration of the output matches the input.
-	 *
-	 * @param title
-	 */
-	public static < T extends RealType< T > & NativeType< T > > ImagePlus wrap( final ImgPlus< T > img )
-	{
-		final ImagePlus imp2 = ImageJFunctions.wrap( img, img.getName() );
-		CalibrationUtils.copyCalibrationToImagePlus( img, imp2 );
-
-		// Fix dimensionality
-		final int zIndex = img.dimensionIndex( Axes.Z );
-		final int cIndex = img.dimensionIndex( Axes.CHANNEL );
-		final int tIndex = img.dimensionIndex( Axes.TIME );
-		imp2.setDimensions(
-				cIndex < 0 ? 1 : ( int ) img.dimension( cIndex ),
-				zIndex < 0 ? 1 : ( int ) img.dimension( zIndex ),
-				tIndex < 0 ? 1 : ( int ) img.dimension( tIndex ) );
-		return imp2;
-	}
 
 	/**
 	 * Resaves the specified image, one file per time-point, so that it can be
@@ -95,6 +72,8 @@ public class YOLOUtils
 	 *            the folder in which to save
 	 * @param logger
 	 *            a logger to report progress.
+	 * @param <T>
+	 *            the pixel type in the input image.
 	 * @return <code>true</code> if resaving happened without issues.
 	 */
 	public static < T extends RealType< T > & NativeType< T > > boolean resaveSingleTimePoints(
@@ -247,7 +226,7 @@ public class YOLOUtils
 	 * <li>width and height are the normalized width and height of the bounding
 	 * box (values between 0 and 1).
 	 * <li>(optional) confidence is the confidence score of the detection
-	 * <ul>
+	 * </ul>
 	 *
 	 * @param path
 	 *            the path to the YOLO results file.
