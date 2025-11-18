@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>TrackMate-YOLO</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<name>TrackMate-YOLO</name>
 	<description>YOLO integration as a detector in TrackMate.</description>
@@ -65,7 +65,8 @@
 		<developerConnection>
 			scm:git:git@github.com:trackmate-sc/TrackMate-YOLO</developerConnection>
 		<url>https://github.com/trackmate-sc/TrackMate-YOLO</url>
-	</scm>
+	  <tag>TrackMate-YOLO-1.0.0</tag>
+  </scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/trackmate-sc/TrackMate-YOLO/issues</url>
