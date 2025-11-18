@@ -19,3 +19,6 @@ buildNumber.properties
 
 # Junk
 .DS_Store
+
+# samples
+samples/
