@@ -84,15 +84,16 @@
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
+				
+		<scijava.jvm.version>21</scijava.jvm.version>
 
-		<TrackMate.version>8.1.2-SNAPSHOT</TrackMate.version>
+	    <TrackMate.version>8.1.6</TrackMate.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>TrackMate</artifactId>
-			<version>8.1.6</version>
 		</dependency>
 	</dependencies>
 
